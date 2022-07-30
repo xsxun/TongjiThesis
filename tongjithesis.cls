@@ -1,4 +1,4 @@
-\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{tongjithesis}
 [2018/02/15 2 Tongji University Thesis Template]
 \hyphenation{Tongji-Thesis}
@@ -50,14 +50,6 @@
 % 章节标题中的英文以及标号是否用 Times new roman 字体（默认打开）
 
 \DeclareBoolOption{romantitle}
-\IfFileExists{/dev/null}{}{\PassOptionsToClass{fontset=windowsold}{ctexbook}}  %simhei字体
-
-% 以往，为LATEX 文档配置中文支持是一件相当繁琐的事情。默认情况下，CTEX 宏集能自
-% 动检测用户使用的编译方式和操作系统，选择合适的底层支持和字库，从而简化配置过程。
-% 在Windows Vista 及以后的Windows 操作系统上，采用的是中易字库+ 微软雅黑。
-% CTEX 宏集预定义的中文字库还定义了一些字体命令。
-% \songti，\heiti，\fangsong，\kaishu，\lishu，\youyuan，\yahei
-% 等价的，CJK命令为\CJKfamily{zhsong}等。
 
 
 % \option{raggedbottom} 选项（默认打开）
@@ -101,15 +93,37 @@
    \fi
 \fi
 
+% 以往，为LATEX 文档配置中文支持是一件相当繁琐的事情。默认情况下，CTEX 宏集能自
+% 动检测用户使用的编译方式和操作系统，选择合适的底层支持和字库，从而简化配置过程。
+% 在Windows Vista 及以后的Windows 操作系统上，采用的是中易字库+ 微软雅黑。
+% CTEX 宏集预定义的中文字库还定义了一些字体命令。
+% \songti，\heiti，\fangsong，\kaishu，\lishu，\youyuan，\yahei
+% 等价的，CJK命令为\CJKfamily{zhsong}等。
+\LoadClass[a4paper,openany,fontset=none, UTF8,zihao=-4,scheme=plain]{ctexbook}
+% 将伪粗体与伪斜体的选项传递给xeCJK package
 % 使用 \XeTeX\ 引擎时，\pkg{fontspec} 宏包会被 \pkg{xeCJK} 自动调用。传递
 % 给 \pkg{fontspec} 宏包 \option{no-math} 选项，避免部分数学符号字体自动调整
 % 为 CMR。其他引擎下没有这个问题，这一行会被无视。
-\PassOptionsToPackage{no-math}{fontspec}
+\RequirePackage{xeCJK}[AutoFakeBold=1.2,AutoFakeSlant,no-math]
+\RequirePackage{ifplatform}
+\ifwindows
+  \PassOptionsToClass{fontset=windows}{ctexbook}
+\else
+\ifmacosx
+  \PassOptionsToClass{fontset=macos}{ctexbook}
+\else
+  % if linux, load font files from ./fonts/
+  \PassOptionsToClass{fontset=none}{ctexbook}
+  \newCJKfontfamily{\songti}{SimSun}[Path=fonts/, Extension=.ttc]
+  \newCJKfontfamily{\fangsong}{SimFang}[Path=fonts/, Extension=.ttf]
+  \newCJKfontfamily{\kaishu}{SimKai}[Path=fonts/, Extension=.ttf]
+  \newCJKfontfamily{\heiti}{SimHei}[Path=fonts/, Extension=.ttf]
+  \newCJKfontfamily{\lishu}{LiSu}[Path=fonts/, Extension=.ttf]
+  \setCJKmainfont[AutoFakeBold=true]{SimSun}
+\fi
+\fi
 
-%将伪粗体与伪斜体的选项传递给xeCJK package
-\PassOptionsToPackage{AutoFakeBold=1.2,AutoFakeSlant}{xeCJK}
 % 使用 \CTeX\ 宏宝的默认中文字体配置，支持不同引擎
-\LoadClass[a4paper,openany,UTF8,zihao=-4,scheme=plain]{ctexbook}
 
 % etoolbox 引入了LATEX kernel commands的不同实现，但功能一样。
 \RequirePackage{etoolbox}
@@ -183,10 +197,10 @@
 
 % 参考文献引用宏包。使用biblatex包
 \iftongji@numeric
-  \RequirePackage[backend=biber,style=gb7714-2015,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin]{biblatex} 
+  \RequirePackage[backend=biber,style=gb7714-2015,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin,gbnamefmt=lowercase]{biblatex} 
 \else
   \iftongji@authoryear % 若需使用author-year格式的文献引用，可将style选择为：gb7714-2015ay
-    \RequirePackage[backend=biber,style=gb7714-2015ay,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin]{biblatex} 
+    \RequirePackage[backend=biber,style=gb7714-2015ay,gbpub=false,isbn=false,doi=false,gbtitlelink=true,url=false,sortlocale=zh__pinyin,gbnamefmt=lowercase]{biblatex} 
   \fi
 \fi
 % 参考文献宏包的其他选项：
