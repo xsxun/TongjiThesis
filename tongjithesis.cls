@@ -451,7 +451,7 @@
 
 % 如果章节题目中的英文要使用 Times new roman，那么就加上 rmfamily
 \def\tongji@title@font{%
-  \iftongji@romantitle\rmfamily\else\heiti\fi}
+  \iftongji@romantitle\rmfamily\heiti\else\heiti\fi}
 
 
 % \pkg{fancyhdr} 定义页眉页脚很方便，但是有一个非常隐蔽的坑。通过 \pkg{fancyhdr}
